@@ -39,16 +39,15 @@ farmhub/
 
 ## 🚀 Setup Instructions
 
-### Step 1: Create the main project folder
-```bash
-mkdir FarmHub
-cd FarmHub
-```
-### Step 2: Clone your repository inside it
+### Step 1: Clone your repository inside it
 ```bash
 git clone https://github.com/shahoraiar/FarmHub.git
 ```
-### 2. Create virtual environment
+### Step 2: Go inside the repo
+```bash
+cd FarmHub
+```
+### 4. Create virtual environment
 ```bash
 python -m venv venv
 source venv/bin/activate   # Linux/Mac[git bash]
