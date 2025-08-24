@@ -104,7 +104,7 @@ uvicorn reporting.main:app --port 5000 --reload
 | -------------- | ------------------------- | ------------------- | ----------------- | ----------------------- |
 | **SuperUser**  | SuperAdmin, Agent, Farmer | All                 | All               | Root admin              |
 | **SuperAdmin** | Agent, Farmer             | Own + Agents + Farmer | Own + Agents      | Cannot create SuperUser |
-| **Agent**      | ❌                         | Own Farmers & Farms | ❌                 | Only read access        |
+| **Agent**      | Farmer                         | Own Farmers & Farms | ❌                 | Only read access        |
 | **Farmer**     | ❌                         | Own data            | ❌                 | Only read access        |
 
 ---
@@ -117,6 +117,8 @@ uvicorn reporting.main:app --port 5000 --reload
 ## 🌱 Farms & Farmers
 
 ### Farmer (Role User)
+> **Note:** To create a Farmer user, you must first create a Farm.  
+> A Farmer must be assigned to a Farm, and a Farm can have many Farmers.
 | URL | Method | Description | Permission |
 |-----|--------|-------------|-------------|
 | `/farms/farmer/create/` | POST | Create a **Farmer user** + Farmer profile | SuperAdmin, Agent (with model perms) |
@@ -175,27 +177,45 @@ Permissions are enforced by **Django Groups + DRF Custom Permissions**:
 ---
 
 ## 🔗 API + Admin Flow
+### 📌 Step-by-step Flow
 
-1. **SuperUser** creates a `SuperAdmin` via `/registration/`  
-2. **SuperAdmin** logs in → creates **Agents**  
-3. **Agents** log in → create **Farms**  
-4. **Agents/SuperAdmins** → create **Farmers** inside farms  
-5. **Farmers** → only access their own farm data  
+1. SuperUser (Django system user) is created with:
+```
+python manage.py createsuperuser
+```
+→ Enter credentials (username, email, password).
+→ Login to /dashboard (Django Admin).
 
----
+2. From the Admin UI, the SuperUser can create a SuperAdmin user.
+3. SuperAdmin logs in and can create Agents.
+4. Agents log in and create Farms.
+5. Agents/SuperAdmins create Farmers inside Farms (each Farmer must belong to a Farm).
+6. Farmers only access their own farm data.
 
-## 📌 Example Workflows
-
-### Create SuperAdmin
-```bash
-POST /registration/
+### 📌 Creating a SuperAdmin via API
+If you use the API, you don’t need to log in first.
+You can directly call:
+POST
+http://127.0.0.1:8000/api/v1/registration/
+```
 {
-  "username": "admin1",
-  "password": "1234",
-  "user_role": "SuperAdmin"
+  "first_name": "John",
+  "last_name": "Doe",
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "yourpassword",
+  "user_role": "SuperUser"
 }
 ```
-👉 Must be created by SuperUser otherwise created_by=0
+This will create a SuperAdmin account directly via API.
+
+✅ Clear difference:
+
+- Django Admin UI → create via createsuperuser + Dashboard login.
+- API → send JSON to /registration/, no login needed first.
+  
+---
+
 Create Agent
 POST /registration/ (with JWT of SuperAdmin)
 ```text
