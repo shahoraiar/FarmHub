@@ -344,12 +344,13 @@ POST api/v1/production/cow/milk/
 - **List Milk Production** – `GET /api/v1/production/cow/milk/list/`
 
 --- 
+---
+---
 
+# 🌾 FarmHub Reporting API **(FastAPI)**
 
-#🌾 FarmHub Reporting API **(FastAPI)**
-
-### FarmHub Reporting API is a FastAPI-based reporting service for livestock and farm management.  
-### It works alongside the Django FarmHub system and provides reporting endpoints for farms, cows, cow activities, and milk production.  
+FarmHub Reporting API is a **FastAPI-based** reporting service for livestock and farm management.   
+It works alongside the Django FarmHub system and provides reporting endpoints for farms, cows, cow activities, and milk production.  
 
 ## 🔑 Authentication   
 FarmHub Reporting API uses JWT tokens for authentication.
@@ -375,29 +376,29 @@ Response:
 
 access: Use this token in the Authorization header for API requests.
 
-👤 User Endpoints
+## 👤 User Endpoints
 
 | Endpoint    | Method | Description           | Notes                                     |
 | ----------- | ------ | --------------------- | ----------------------------------------- |
 | `/users/me` | GET    | Get current user info | Must pass `Authorization: Bearer <token>` |
 
-🌱 Farm Endpoints
+## 🌱 Farm Endpoints
 | Endpoint | Method | Description | Permissions                                                  |
 | -------- | ------ | ----------- | ------------------------------------------------------------ |
 | `/farms` | GET    | List farms  | SuperAdmin: all, Agent: own hierarchy, Farmer: assigned farm |
 
-🐄 Cow Endpoints
+## 🐄 Cow Endpoints
 | Endpoint                | Method | Description                              | Permissions                                         |
 | ----------------------- | ------ | ---------------------------------------- | --------------------------------------------------- |
 | `/cow/details`          | GET    | List cows                                | SuperAdmin: all, Agent: hierarchy, Farmer: own cows |
 | `/cow/activity/summary` | GET    | Cow activity report (treatments & costs) | Same as above                                       |
 
-🥛 Milk Production Endpoints
+## 🥛 Milk Production Endpoints
 | Endpoint                   | Method | Description                              | Permissions                                         |
 | -------------------------- | ------ | ---------------------------------------- | --------------------------------------------------- |
 | `/production/milk/summary` | GET    | Milk production report (per cow & month) | SuperAdmin: all, Agent: hierarchy, Farmer: own cows |
 
-⚙️ Roles & Permissions
+## ⚙️ Roles & Permissions
 | Role           | Farms              | Cows               | Cow Activities     | Milk Production    |
 | -------------- | ------------------ | ------------------ | ------------------ | ------------------ |
 | **SuperAdmin** | View all           | View all           | View all           | View all           |
@@ -415,7 +416,7 @@ access: Use this token in the Authorization header for API requests.
 - Cow activity and milk reports return totals per cow and grand totals.
 
 ---
-
+---
 ```
 Developer
 ❤️ Shahoraiar Hossain
