@@ -1,0 +1,331 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmHub Login</title>
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/forms.css' %}">
+    <style>
+        /* Center form vertically & horizontally */
+        body.login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f5f5f5;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            transition: background 0.3s;
+            overflow-x: hidden;
+        }
+
+        body.login.dark {
+            background: #1e1e1e;
+        }
+
+        .login-container {
+            max-width: 400px;
+            width: 90%;
+            padding: 40px 30px;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+
+        body.login.dark .login-container {
+            background: #2c2c2c;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Headings and text */
+        .login-container h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0em 0 .5em 0;
+        }
+
+        .login-container p {
+            font-size: 16px;
+            margin-bottom: 25px;
+            color: #555;
+            text-align: center;
+        }
+
+        body.login.dark .login-container p {
+            color: #ccc;
+        }
+
+        /* Inputs */
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        body.login.dark .login-container input,
+        body.login.dark .login-container input[type="text"],
+        body.login.dark .login-container input[type="password"] {
+            background: #444 !important;
+            color: #fff !important;
+            border: 1px solid #666 !important;
+        }
+
+        body.login.dark .login-container input::placeholder {
+            color: #bbb !important;
+        }
+
+        /* Labels for inputs */
+        .login-container label {
+            font-weight: normal;
+            color: #555;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        body.login.dark .login-container label {
+            color: #ccc;
+        }
+
+        /* Input focus effect */
+        .login-container input:focus {
+            border-color: #2d6a4f;
+            box-shadow: 0 0 5px rgba(45, 106, 79, 0.5);
+            outline: none;
+        }
+
+        body.login.dark .login-container input:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Submit button */
+        .login-container button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background: #2d6a4f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-container button[type="submit"]:hover {
+            background: #1b4332;
+        }
+
+        /* Theme toggle inline with heading */
+        #theme-toggle {
+            cursor: pointer;
+            font-size: 1.2em;
+            border: none;
+            background: none;
+            color: #2d6a4f;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        body.login.dark #theme-toggle {
+            color: #ffd700;
+        }
+
+        body.login.dark .login-container h2 {
+            color: #fff;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 360px) {
+            .login-container {
+                padding: 15px 10px;
+                margin: 5px;
+            }
+
+            .login-container h2 {
+                font-size: 20px;
+            }
+
+            .login-container p {
+                font-size: 12px;
+                margin-bottom: 15px;
+            }
+
+            .login-container input {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .login-container button[type="submit"] {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .login-container label {
+                font-size: 0.8rem;
+            }
+
+            #theme-toggle {
+                font-size: 1em;
+            }
+        }
+
+        @media (min-width: 361px) and (max-width: 480px) {
+            .login-container {
+                padding: 20px 15px;
+                margin: 10px;
+            }
+
+            .login-container h2 {
+                font-size: 22px;
+            }
+
+            .login-container p {
+                font-size: 13px;
+                margin-bottom: 20px;
+            }
+
+            .login-container input {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .login-container button[type="submit"] {
+                font-size: 15px;
+                padding: 12px;
+            }
+
+            .login-container label {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .login-container {
+                max-width: 500px;
+                padding: 30px 20px;
+                margin: 15px;
+            }
+
+            .login-container h2 {
+                font-size: 26px;
+            }
+
+            .login-container p {
+                font-size: 15px;
+            }
+
+            .login-container input {
+                font-size: 15px;
+                padding: 11px;
+            }
+
+            .login-container button[type="submit"] {
+                font-size: 17px;
+                padding: 13px;
+            }
+
+            .login-container label {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .login-container {
+                max-width: 450px;
+                padding: 40px 30px;
+                margin: 20px;
+            }
+
+            .login-container h2 {
+                font-size: 28px;
+            }
+
+            .login-container p {
+                font-size: 16px;
+            }
+
+            .login-container input {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            .login-container button[type="submit"] {
+                font-size: 18px;
+                padding: 14px;
+            }
+
+            .login-container label {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="login">
+
+    <div class="login-container" id="login-box">
+        <h2>
+            🔑 FarmHub Login
+            <button id="theme-toggle">🌞</button>
+        </h2>
+
+        <p>Welcome! Please log in to continue.</p>
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div>
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+            <div>
+                {{ form.password.label_tag }}
+                {{ form.password }}
+            </div>
+            <button type="submit">Login</button>
+            {% if form.errors %}
+            <div style="color:red; margin-top:10px; text-align:center;">Invalid username or password.</div>
+            {% endif %}
+        </form>
+    </div>
+
+    <script src="{% static 'admin/js/core.js' %}"></script>
+    <script>
+        const body = document.body;
+        const toggle = document.getElementById("theme-toggle");
+
+        // Load theme from localStorage
+        if (localStorage.getItem("theme") === "dark") {
+            body.classList.add("dark");
+            toggle.textContent = "🌙";
+        } else {
+            toggle.textContent = "🌞";
+        }
+
+        // Toggle theme on click
+        toggle.onclick = () => {
+            body.classList.toggle("dark");
+            let dark = body.classList.contains("dark");
+            toggle.textContent = dark ? "🌙" : "🌞";
+            localStorage.setItem("theme", dark ? "dark" : "light");
+        }
+    </script>
+
+</body>
+
+</html>

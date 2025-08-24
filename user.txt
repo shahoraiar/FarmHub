@@ -1,0 +1,27 @@
+-----------SuperAdmin---------
+{
+    "username": "super1",
+    "password": "12345678"
+}
+{
+    "username": "superadmin1",
+    "password": "12345678a1"
+}
+
+--------------agent------------
+{
+    "username": "agent1",
+    "password": "12345678"
+}
+
+
+--------------farmer---------------
+{
+    "username": "farmer_a_1",
+    "password": "12345678"
+}
+
+
+
+
+
