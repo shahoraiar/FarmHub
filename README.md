@@ -47,20 +47,20 @@ git clone https://github.com/shahoraiar/FarmHub.git
 ```bash
 cd FarmHub
 ```
-### 4. Create virtual environment
+### Step 3: Create virtual environment
 ```bash
 python -m venv venv
 source venv/bin/activate   # Linux/Mac[git bash]
 venv\Scripts\activate      # Windows[powershell]
 ```
-### 3. Install dependencies
+### 4. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 ---
 ## 🚀 Run the Project
 
-## Run Django 
+### Run Django 
 ```
 Example: if your terminal looks like this: 
 (venv) I:\FarmHub>
@@ -89,15 +89,15 @@ uvicorn reporting.main:app --port 5000 --reload
 ## 🔑 Authentication & Tokens
 | URL | Method | Description | Permission |
 |-----|--------|-------------|-------------|
+| `/` | GET | Default login page (Django’s default `LoginView`) | Public |
 | `/dashboard/login/` | GET | Redirects to **Django Admin Login** | Public |
 | `/dashboard/` | GET | Django Admin Dashboard | Logged-in users (role-based) |
-| `/` | GET | Default login page (Django’s default `LoginView`) | Public |
 | `/token/` | POST | Get JWT token (username & password) | Public |
 | `/token/refresh/` | POST | Refresh JWT token | Authenticated users |
 
 ---
 
-## 👥 User Registration & Roles
+## 👥 User Registration & Roles(Admin UI)
 | Role           | Can Create                | Can View            | Can Update/Delete | Notes                   |
 | -------------- | ------------------------- | ------------------- | ----------------- | ----------------------- |
 | **SuperUser**  | SuperAdmin, Agent, Farmer | All                 | All               | Root admin              |
@@ -106,7 +106,7 @@ uvicorn reporting.main:app --port 5000 --reload
 | **Farmer**     | ❌                         | Own data            | ❌                 | Only read access        |
 
 ---
-## User Registration API
+## User Registration API(DRF)
 | URL              | Method | Description         | Who Can Create                                                                    |
 | ---------------- | ------ | ------------------- | --------------------------------------------------------------------------------- |
 | `/registration/` | POST   | Register a new user | SuperUser → SuperAdmin <br> SuperAdmin → Agent <br> Farmers created via Farms app |
@@ -115,8 +115,9 @@ uvicorn reporting.main:app --port 5000 --reload
 ## 🌱 Farms & Farmers
 
 ### Farmer (Role User)
-> **Note:** To create a Farmer user, you must first create a Farm.  
-> A Farmer must be assigned to a Farm, and a Farm can have many Farmers.
+- **Note:** To create a Farmer user, you must first create a Farm.  
+- A Farmer must be assigned to a Farm, and a Farm can have many Farmers.
+
 | URL | Method | Description | Permission |
 |-----|--------|-------------|-------------|
 | `/farms/farmer/create/` | POST | Create a **Farmer user** + Farmer profile | SuperAdmin, Agent (with model perms) |
