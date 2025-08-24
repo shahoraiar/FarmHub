@@ -75,7 +75,7 @@ python manage.py runserver
 ```
 
 ## Run FastAPI (Reporting Service)
-⚡ Important: You must open another terminal window/tab and also activate the virtual environment there.
+⚡ **Important:** You must open another terminal window/tab and also activate the virtual environment there.
 ```txt
 Example: in the second terminal, if you are here:
 (venv) I:\FarmHub>
@@ -193,7 +193,7 @@ python manage.py createsuperuser
 
 ### 📌 Creating a SuperAdmin via API
 If you use the API, you don’t need to log in first.
-You can directly call:
+You can directly call:  
 POST
 http://127.0.0.1:8000/api/v1/registration/
 ```
@@ -216,7 +216,7 @@ This will create a SuperAdmin account directly via API.
 ---
 
 Create Agent
-POST /registration/ (with JWT of SuperAdmin)
+POST /api/v1/registration/ (with JWT of SuperAdmin)
 ```text
 {
   "username": "agent1",
@@ -225,7 +225,7 @@ POST /registration/ (with JWT of SuperAdmin)
 }
 ```
 Create Farm
-POST /farms/create/ (with JWT of Agent/SuperAdmin)
+POST api/v1/farms/create/ (with JWT of Agent/SuperAdmin)
 ```text
 {
   "name": "Green Farm",
@@ -233,7 +233,7 @@ POST /farms/create/ (with JWT of Agent/SuperAdmin)
 }
 ````
 Create Farmer
-POST /farms/farmer/create/ (with JWT of Agent/SuperAdmin)
+POST api/v1/farms/farmer/create/ (with JWT of Agent/SuperAdmin)
 ```text
 {
   "first_name": "John",
@@ -298,7 +298,7 @@ Admin UI:
 
 🔗 Example API Workflows
 Create Cow (Farmer)  
-POST /cow/create/  
+POST api/v1/cow/create/  
 ```text
 {
   "cow_tag": "C-101",
@@ -312,7 +312,7 @@ POST /cow/create/
 }
 ```
 Create Cow Activity (Farmer)  
-POST /cow/activity/create/  
+POST api/v1/cow/activity/create/  
 ```text
 {
   "cow": 1,
@@ -324,7 +324,7 @@ POST /cow/activity/create/
 }
 ```
 Create Milk Record (Farmer)  
-POST /production/cow/milk/  
+POST api/v1/production/cow/milk/  
 ```text
 {
   "cow": 1,
@@ -333,11 +333,15 @@ POST /production/cow/milk/
   "date": "2025-08-25"
 }
 ```  
-- List Farms – GET /farms/list/
-- List Farmers – GET /farms/farmer/list/
-- List Cows – GET /cow/list/
-- List Cow Activities – GET /cow/activity/list/
-- List Milk Production – GET /production/cow/milk/list/
+### 📋 List Endpoints (Require JWT Access Token)  
+ 
+> **Note:** All the following endpoints require a valid **JWT access token** in the Authorization header.  
+
+- **List Farms** – `GET /api/v1/farms/list/`  
+- **List Farmers** – `GET /api/v1/farms/farmer/list/`  
+- **List Cows** – `GET /api/v1/cow/list/`  
+- **List Cow Activities** – `GET /api/v1/cow/activity/list/`  
+- **List Milk Production** – `GET /api/v1/production/cow/milk/list/`
 
 --- 
 
