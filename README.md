@@ -63,7 +63,7 @@ pip install -r requirements.txt
 ## 🚀 Run the Project
 
 ## Run Django 
-```txt
+```
 Example: if your terminal looks like this: 
 (venv) I:\FarmHub>
 ```
