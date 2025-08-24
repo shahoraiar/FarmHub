@@ -89,13 +89,12 @@ uvicorn reporting.main:app --port 5000 --reload
 ## 🔑 Authentication & Tokens
 
 > **Note:**  
-> - `/dashboard/login/` and `/dashboard/` are for **Django Admin UI**.   
+> - `/dashboard/login/` and `/` are for **Django Admin UI**.   
 > - `/token/` and `/token/refresh/` are for **DRF API (JWT authentication)**.
 
 | URL                  | Method | Description                                       | Permission                     |
 |----------------------|--------|---------------------------------------------------|--------------------------------|
 | `/`                  | GET    | Default login page (Django’s `LoginView`)        | Public                         |
-| `/dashboard/login/`  | GET    | Redirects to **Django Admin Login**             | Public                         |
 | `/dashboard/`        | GET    | **Django Admin Dashboard**                        | Logged-in users (role-based)   |
 | `/token/`            | POST   | Get **JWT token** (provide username & password)  | Public                         |
 | `/token/refresh/`    | POST   | Refresh JWT token                                 | Authenticated users            |
@@ -120,8 +119,9 @@ uvicorn reporting.main:app --port 5000 --reload
 ## 🌱 Farms & Farmers
 
 ### Farmer (Role User)
-- **Note:** To create a Farmer user, you must first create a Farm.  
-- A Farmer must be assigned to a Farm, and a Farm can have many Farmers.
+> **Note:**
+> - To create a Farmer user, you must first create a Farm.  
+> - A Farmer must be assigned to a Farm, and a Farm can have many Farmers.
 
 | URL | Method | Description | Permission |
 |-----|--------|-------------|-------------|
@@ -187,8 +187,8 @@ Permissions are enforced by **Django Groups + DRF Custom Permissions**:
 ```
 python manage.py createsuperuser
 ```
-→ Enter credentials (username, email, password).  
-→ Login to /dashboard (Django Admin).
+> → Enter credentials (username, email, password).  
+> → Login to /dashboard (Django Admin).
 
 2. From the Admin UI, the SuperUser can create a SuperAdmin user.
 3. SuperAdmin logs in and can create Agents.
@@ -213,15 +213,15 @@ http://127.0.0.1:8000/api/v1/registration/
 ```
 This will create a SuperAdmin account directly via API.
 
-✅ Clear difference:
-
+✅ difference to create SuperAdmin Role User:
 - Django Admin UI → create via createsuperuser + Dashboard login.
 - API → send JSON to api/v1/registration/, no login needed first.
   
 ---
 
-Create Agent
-POST /api/v1/registration/ (with JWT of SuperAdmin)
+### Create Agent  
+POST 
+/api/v1/registration/ (with JWT of SuperAdmin)
 ```text
 {
   "username": "agent1",
@@ -229,16 +229,18 @@ POST /api/v1/registration/ (with JWT of SuperAdmin)
   "user_role": "Agent"
 }
 ```
-Create Farm
-POST api/v1/farms/create/ (with JWT of Agent/SuperAdmin)
+### Create Farm  
+POST 
+api/v1/farms/create/ (with JWT of Agent/SuperAdmin)
 ```text
 {
   "name": "Green Farm",
   "location": "Village X"
 }
 ````
-Create Farmer
-POST api/v1/farms/farmer/create/ (with JWT of Agent/SuperAdmin)
+### Create Farmer
+POST 
+api/v1/farms/farmer/create/ (with JWT of Agent/SuperAdmin)
 ```text
 {
   "first_name": "John",
@@ -251,17 +253,17 @@ POST api/v1/farms/farmer/create/ (with JWT of Agent/SuperAdmin)
   "farm": 1
 }
 ```
-Note:  
-After successful creation, this user is automatically added to the Farmer Role group.  
+> Note:  
+> After successful creation, this user is automatically added to the Farmer Role group.  
 
-🐄 Livestock Management
+### 🐄 Livestock Management
 Cow
 | URL            | Method | Description  | Permission                                             |
 | -------------- | ------ | ------------ | ------------------------------------------------------ |
 | `api/v1/cow/create/` | POST   | Create a cow | Farmer                                                 |
 | `api/v1/cow/list/`   | GET    | List cows    | SuperAdmin, Agent (under hierarchy), Farmer (own cows) |
 
-Cow Activity
+### Cow Activity
 | URL                     | Method | Description           | Permission                |
 | ----------------------- | ------ | --------------------- | ------------------------- |
 | `api/v1/cow/activity/create/` | POST   | Create a cow activity | Farmer                    |
@@ -269,14 +271,14 @@ Cow Activity
 
 ## Validation rules:  
 - Farmer can only add cows/activities for own farm  
--- Cow must belong to the selected farm  
+- Cow must belong to the selected farm  
 
 ## Admin UI:
 - SuperAdmin → see all agents’ farmers’ cows
 - Agent → see their farmers’ cows
 - Farmer → see own cows
-- 
-🥛 Milk Production
+
+### 🥛 Milk Production
 | URL                          | Method | Description        | Permission                |
 | ---------------------------- | ------ | ------------------ | ------------------------- |
 | `api/v1/production/cow/milk/`      | POST   | Create milk record | Farmer                    |
@@ -293,7 +295,7 @@ Admin UI:
 - Agent → view under hierarchy
 - Farmer → create & edit their own milk records
   
-🛠️ Permissions Summary
+## 🛠️ Permissions Summary
 
 | Role           | Cow                | CowActivity        | MilkProduction     | Farms                | Farmers                             |
 | -------------- | ------------------ | ------------------ | ------------------ | -------------------- | ----------------------------------- |
@@ -301,9 +303,10 @@ Admin UI:
 | **Agent**      | View hierarchy     | View hierarchy     | View hierarchy     | Create/Read/Update   | Create/Read/Update                  |
 | **Farmer**     | Create/Read/Update | Create/Read/Update | Create/Read/Update | Read-only (assigned) | Read-only (self)                    |
 
-🔗 Example API Workflows
-Create Cow (Farmer)  
-POST api/v1/cow/create/  
+## 🔗 Example API Workflows  
+### Create Cow (Farmer)  
+POST 
+api/v1/cow/create/  
 ```text
 {
   "cow_tag": "C-101",
@@ -316,8 +319,9 @@ POST api/v1/cow/create/
   "source": "born"
 }
 ```
-Create Cow Activity (Farmer)  
-POST api/v1/cow/activity/create/  
+### Create Cow Activity (Farmer)  
+POST 
+api/v1/cow/activity/create/  
 ```text
 {
   "cow": 1,
@@ -328,8 +332,9 @@ POST api/v1/cow/activity/create/
   "is_completed": false
 }
 ```
-Create Milk Record (Farmer)  
-POST api/v1/production/cow/milk/  
+### Create Milk Record (Farmer)  
+POST 
+api/v1/production/cow/milk/  
 ```text
 {
   "cow": 1,
@@ -357,6 +362,9 @@ POST api/v1/production/cow/milk/
 FarmHub Reporting API is a **FastAPI-based** reporting service for livestock and farm management.   
 It works alongside the Django FarmHub system and provides reporting endpoints for farms, cows, cow activities, and milk production.  
 
+> After running the service, access the FastAPI docs at:  
+> `http://127.0.0.1:5000/docs`
+
 ## 🔑 Authentication   
 FarmHub Reporting API uses JWT tokens for authentication.
 
@@ -379,7 +387,7 @@ Response:
 }
 ```
 
-access: Use this token in the Authorization header for API requests.
+> access: Use this token in the Authorization header for API requests.
 
 ## 👤 User Endpoints
 
@@ -423,7 +431,7 @@ access: Use this token in the Authorization header for API requests.
 ---
 ---
 ```
-Developer
-❤️ Shahoraiar Hossain
-```
+  
+👨‍💻 Developer
+Built with ❤️ by Shahoraiar Hossain
 
