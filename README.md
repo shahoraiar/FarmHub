@@ -226,7 +226,7 @@ POST /registration/ (with JWT of SuperAdmin)
 }
 ```
 Create Farm
-POST /farms/create/ (with JWT of Agent)
+POST /farms/create/ (with JWT of Agent/SuperAdmin)
 ```text
 {
   "name": "Green Farm",
@@ -234,7 +234,7 @@ POST /farms/create/ (with JWT of Agent)
 }
 ````
 Create Farmer
-POST /farms/farmer/create/ (with JWT of Agent)
+POST /farms/farmer/create/ (with JWT of Agent/SuperAdmin)
 ```text
 {
   "first_name": "John",
@@ -247,6 +247,8 @@ POST /farms/farmer/create/ (with JWT of Agent)
   "farm": 1
 }
 ```
+Note:  
+After successful creation, this user is automatically added to the Farmer Role group.  
 
 🐄 Livestock Management
 Cow
@@ -261,51 +263,43 @@ Cow Activity
 | `/cow/activity/create/` | POST   | Create a cow activity | Farmer                    |
 | `/cow/activity/list/`   | GET    | List cow activities   | SuperAdmin, Agent, Farmer |
 
-Validation rules:
+## Validation rules:  
+- Farmer can only add cows/activities for own farm  
+-- Cow must belong to the selected farm  
 
-Farmer can only add cows/activities for own farm
-
-Cow must belong to the selected farm
-
-Admin UI:
-
-SuperAdmin → see all agents’ farmers’ cows
-
-Agent → see their farmers’ cows
-
-Farmer → see own cows
+## Admin UI:
+- SuperAdmin → see all agents’ farmers’ cows
+- Agent → see their farmers’ cows
+- Farmer → see own cows
+- 
 🥛 Milk Production
 | URL                          | Method | Description        | Permission                |
 | ---------------------------- | ------ | ------------------ | ------------------------- |
 | `/production/cow/milk/`      | POST   | Create milk record | Farmer                    |
 | `/production/cow/milk/list/` | GET    | List milk records  | SuperAdmin, Agent, Farmer |
 
-Rules:
+Rules:  
+- Farmer can add milk for own cows only
+- SuperAdmin can create/update/delete
+- Agent → view only, no create/update/delete
+- Total yield automatically calculated as morning + evening
 
-Farmer can add milk for own cows only
-
-SuperAdmin & Agent → view only, no create/update/delete
-
-Total yield automatically calculated as morning + evening
-
-Admin UI:
-
-SuperAdmin → manage all cows/milk
-
-Agent → view under hierarchy
-
-Farmer → create & edit their own milk records
+Admin UI:  
+- SuperAdmin → manage all cows/milk
+- Agent → view under hierarchy
+- Farmer → create & edit their own milk records
+  
 🛠️ Permissions Summary
 
 | Role           | Cow                | CowActivity        | MilkProduction     | Farms                | Farmers                             |
 | -------------- | ------------------ | ------------------ | ------------------ | -------------------- | ----------------------------------- |
 | **SuperAdmin** | View all           | View all           | View all           | Create/Read/Update   | Create/Read/Update Agents & Farmers |
-| **Agent**      | View hierarchy     | View hierarchy     | View hierarchy     | Read-only            | Read-only                           |
+| **Agent**      | View hierarchy     | View hierarchy     | View hierarchy     | Create/Read/Update   | Create/Read/Update                  |
 | **Farmer**     | Create/Read/Update | Create/Read/Update | Create/Read/Update | Read-only (assigned) | Read-only (self)                    |
 
 🔗 Example API Workflows
-Create Cow (Farmer)
-POST /cow/create/
+Create Cow (Farmer)  
+POST /cow/create/  
 ```text
 {
   "cow_tag": "C-101",
@@ -318,8 +312,8 @@ POST /cow/create/
   "source": "born"
 }
 ```
-Create Cow Activity (Farmer)
-POST /cow/activity/create/
+Create Cow Activity (Farmer)  
+POST /cow/activity/create/  
 ```text
 {
   "cow": 1,
@@ -330,8 +324,8 @@ POST /cow/activity/create/
   "is_completed": false
 }
 ```
-Create Milk Record (Farmer)
-POST /production/cow/milk/
+Create Milk Record (Farmer)  
+POST /production/cow/milk/  
 ```text
 {
   "cow": 1,
@@ -339,44 +333,44 @@ POST /production/cow/milk/
   "evening_yield_liters": 8,
   "date": "2025-08-25"
 }
-```
+```  
 - List Farms – GET /farms/list/
 - List Farmers – GET /farms/farmer/list/
 - List Cows – GET /cow/list/
 - List Cow Activities – GET /cow/activity/list/
 - List Milk Production – GET /production/cow/milk/list/
 
-🌾 FarmHub Reporting API - README
+--- 
 
-FarmHub Reporting API is a FastAPI-based reporting service for livestock and farm management.
-It works alongside the Django FarmHub system and provides reporting endpoints for farms, cows, cow activities, and milk production.
-🔑 Authentication
+🌾 FarmHub Reporting API **(FastAPI)**
 
+FarmHub Reporting API is a FastAPI-based reporting service for livestock and farm management.  
+It works alongside the Django FarmHub system and provides reporting endpoints for farms, cows, cow activities, and milk production.  
+
+🔑 Authentication   
 FarmHub Reporting API uses JWT tokens for authentication.
 
 1. Login to get Token
-
-Endpoint: /auth/token
-Method: POST
-Payload:
-
+Endpoint: /auth/token  
+Method: POST  
+Payload:  
+```
 {
-  "username": "your_username",
-  "password": "your_password"
+  "username": "super1",
+  "password": "12345678"
 }
-
+```
 
 Response:
-
+```
 {
   "access": "<JWT_ACCESS_TOKEN>",
   "refresh": "<JWT_REFRESH_TOKEN>"
 }
-
+```
 
 access: Use this token in the Authorization header for API requests.
 
-refresh: Can be used to generate a new access token if expired (not implemented yet).
 👤 User Endpoints
 
 | Endpoint    | Method | Description           | Notes                                     |
@@ -393,6 +387,7 @@ refresh: Can be used to generate a new access token if expired (not implemented 
 | ----------------------- | ------ | ---------------------------------------- | --------------------------------------------------- |
 | `/cow/details`          | GET    | List cows                                | SuperAdmin: all, Agent: hierarchy, Farmer: own cows |
 | `/cow/activity/summary` | GET    | Cow activity report (treatments & costs) | Same as above                                       |
+
 🥛 Milk Production Endpoints
 | Endpoint                   | Method | Description                              | Permissions                                         |
 | -------------------------- | ------ | ---------------------------------------- | --------------------------------------------------- |
@@ -405,23 +400,20 @@ refresh: Can be used to generate a new access token if expired (not implemented 
 | **Agent**      | View own hierarchy | View own hierarchy | View own hierarchy | View own hierarchy |
 | **Farmer**     | Assigned farm only | Own cows           | Own cows           | Own cows           |
 
-Farmer can only see data related to their own farm and cows.
-Agent can see all farmers under them.
-SuperAdmin sees all data.
-🧩 Notes
-
-JWT expires after 3 hours by default. Refresh token expires in 1 day.
-
-All reporting endpoints use FastAPI Dependency Injection to get the current user from token.
-
-Monthly milk summary uses SQL extract(year, month) for aggregation.
-
-Cow activity and milk reports return totals per cow and grand totals.
-
+- **Farmer** can only see data related to their own farm and cows.  
+- **Agent** can see all farmers under them.   
+- **SuperAdmin** sees all data.
+  
+## 🧩 Notes
+- JWT expires after 3 hours by default. Refresh token expires in 1 day.
+- All reporting endpoints use FastAPI Dependency Injection to get the current user from token.
+- Monthly milk summary uses SQL extract(year, month) for aggregation.
+- Cow activity and milk reports return totals per cow and grand totals.
 
 ---
 
-```text
+```
 Developer
 ❤️ Shahoraiar Hossain
 ```
+
