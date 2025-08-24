@@ -11,15 +11,28 @@ FarmHub is a farm management platform built with **Django** and **FastAPI**.
 ```text
 farmhub/
 │── core/ # Django project
-│ ├── core/ # Django settings
-│ ├── farms/ # Django app with models
-│ ├── manage.py
+│     ├── apps/ # Django apps
+│     │     ├── accounts/ # User module
+│     │     ├── farms/ # Farm, Farmer
+│     │     ├── livestock/ # Cow, CowActivity
+│     │     ├── production/ # MilkProduction
+│     │
+│     ├── core/ # Django settings
+│     ├── system/ # Permissions & roles
+│     ├── templates/ # Django templates
+│     ├── db.sqlite3 # Default database
+│     └── manage.py
 │
-│── reporting/ # FastAPI service
-│ ├── main.py # FastAPI entrypoint
-│ ├── requirements.txt
+│── reporting/ # FastAPI microservice
+│     ├── main.py # FastAPI entrypoint
+│     ├── user_routes.py # Auth, JWT, user info
+│     ├── farm_routes.py # Farm, Farmer, Cow, Activity, Production APIs
+│     ├── database.py # DB connection to Django (SQLite)
+│     ├── models.py # Shared DB models
 │
-└── README.md
+│── requirements.txt # Dependencies
+│── venv/ # Virtual environment
+└── README.md # Project documentation
 ```
 
 ---
