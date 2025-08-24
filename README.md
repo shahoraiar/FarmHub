@@ -1,7 +1,7 @@
 # 🌾 FarmHub
 
-FarmHub is a farm management platform built with **Django** and **FastAPI**. 
-
+FarmHub is a Django-based farm management system with role-based access and integrated livestock & production management.
+The system uses Django Admin for backend control and DRF APIs for frontend/mobile integration.
 This project combines **Django (Admin & APIs)** and **FastAPI (Reporting APIs)** with **role-based permissions**.
 
 ---
@@ -98,17 +98,19 @@ uvicorn reporting.main:app --port 5000 --reload
 ---
 
 ## 👥 User Registration & Roles
-| URL | Method | Description | Who Can Do It? |
-|-----|--------|-------------|----------------|
-| `/registration/` | POST | Register a new user with a specific role (SuperAdmin, Agent, Farmer) | Conditions below |
-
-### 📝 Role-based Conditions for Registration
-- **SuperAdmin** → can only be created by **SuperUser (root admin)**  
-- **Agent** → can only be created by a **SuperAdmin**  
-- **Farmer** → can be created via **Farm apps** only (not directly)  
-- Anonymous users → ❌ cannot create roles (except SuperUser creates SuperAdmin first)  
+| Role           | Can Create                | Can View            | Can Update/Delete | Notes                   |
+| -------------- | ------------------------- | ------------------- | ----------------- | ----------------------- |
+| **SuperUser**  | SuperAdmin, Agent, Farmer | All                 | All               | Root admin              |
+| **SuperAdmin** | Agent, Farmer             | Own + Agents + Farmer | Own + Agents      | Cannot create SuperUser |
+| **Agent**      | ❌                         | Own Farmers & Farms | ❌                 | Only read access        |
+| **Farmer**     | ❌                         | Own data            | ❌                 | Only read access        |
 
 ---
+## User Registration API
+| URL              | Method | Description         | Who Can Create                                                                    |
+| ---------------- | ------ | ------------------- | --------------------------------------------------------------------------------- |
+| `/registration/` | POST   | Register a new user | SuperUser → SuperAdmin <br> SuperAdmin → Agent <br> Farmers created via Farms app |
+
 
 ## 🌱 Farms & Farmers
 
@@ -140,8 +142,7 @@ uvicorn reporting.main:app --port 5000 --reload
 
 ## 🛠️ Django Admin Customizations
 
-- **Users (Admin UI)**:
-  - SuperUser → full control over all users  
+- **Users (Admin UI)**: 
   - SuperAdmin → can only create/manage **Agents** and their Farmers  
   - Agent → can only manage their Farmers  
   - Farmer → ❌ cannot create others  
@@ -192,4 +193,204 @@ POST /registration/
   "user_role": "SuperAdmin"
 }
 ```
+👉 Must be created by SuperUser otherwise created_by=0
+Create Agent
+POST /registration/ (with JWT of SuperAdmin)
+{
+  "username": "agent1",
+  "password": "1234",
+  "user_role": "Agent"
+}
 
+Create Farm
+POST /farms/create/ (with JWT of Agent)
+{
+  "name": "Green Farm",
+  "location": "Village X"
+}
+
+Create Farmer
+POST /farms/farmer/create/ (with JWT of Agent)
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "username": "farmer_john",
+  "email": "john@example.com",
+  "password": "1234",
+  "phone": "1234567890",
+  "address": "Village Road",
+  "farm": 1
+}
+
+🐄 Livestock Management
+Cow
+| URL            | Method | Description  | Permission                                             |
+| -------------- | ------ | ------------ | ------------------------------------------------------ |
+| `/cow/create/` | POST   | Create a cow | Farmer                                                 |
+| `/cow/list/`   | GET    | List cows    | SuperAdmin, Agent (under hierarchy), Farmer (own cows) |
+
+Cow Activity
+| URL                     | Method | Description           | Permission                |
+| ----------------------- | ------ | --------------------- | ------------------------- |
+| `/cow/activity/create/` | POST   | Create a cow activity | Farmer                    |
+| `/cow/activity/list/`   | GET    | List cow activities   | SuperAdmin, Agent, Farmer |
+
+Validation rules:
+
+Farmer can only add cows/activities for own farm
+
+Cow must belong to the selected farm
+
+Admin UI:
+
+SuperAdmin → see all agents’ farmers’ cows
+
+Agent → see their farmers’ cows
+
+Farmer → see own cows
+🥛 Milk Production
+| URL                          | Method | Description        | Permission                |
+| ---------------------------- | ------ | ------------------ | ------------------------- |
+| `/production/cow/milk/`      | POST   | Create milk record | Farmer                    |
+| `/production/cow/milk/list/` | GET    | List milk records  | SuperAdmin, Agent, Farmer |
+
+Rules:
+
+Farmer can add milk for own cows only
+
+SuperAdmin & Agent → view only, no create/update/delete
+
+Total yield automatically calculated as morning + evening
+
+Admin UI:
+
+SuperAdmin → manage all cows/milk
+
+Agent → view under hierarchy
+
+Farmer → create & edit their own milk records
+🛠️ Permissions Summary
+
+| Role           | Cow                | CowActivity        | MilkProduction     | Farms                | Farmers                             |
+| -------------- | ------------------ | ------------------ | ------------------ | -------------------- | ----------------------------------- |
+| **SuperAdmin** | View all           | View all           | View all           | Create/Read/Update   | Create/Read/Update Agents & Farmers |
+| **Agent**      | View hierarchy     | View hierarchy     | View hierarchy     | Read-only            | Read-only                           |
+| **Farmer**     | Create/Read/Update | Create/Read/Update | Create/Read/Update | Read-only (assigned) | Read-only (self)                    |
+
+🔗 Example API Workflows
+Create Cow (Farmer)
+POST /cow/create/
+{
+  "cow_tag": "C-101",
+  "name": "Daisy",
+  "breed": "Holstein",
+  "gender": "Female",
+  "farm": 1,
+  "farmer": 1,
+  "weight_kg": 120,
+  "source": "born"
+}
+
+Create Cow Activity (Farmer)
+POST /cow/activity/create/
+{
+  "cow": 1,
+  "activity_type": "Vaccination",
+  "title": "FMD Vaccine",
+  "date": "2025-08-25",
+  "priority": "High",
+  "is_completed": false
+}
+Create Milk Record (Farmer)
+POST /production/cow/milk/
+{
+  "cow": 1,
+  "morning_yield_liters": 10,
+  "evening_yield_liters": 8,
+  "date": "2025-08-25"
+}
+List Farms, Farmers, Cows, Cow Activities, Milk Production
+GET /farms/list/
+GET /farms/farmer/list/
+GET /cow/list/
+GET /cow/activity/list/
+GET /production/cow/milk/list/
+
+🌾 FarmHub Reporting API - README
+
+FarmHub Reporting API is a FastAPI-based reporting service for livestock and farm management.
+It works alongside the Django FarmHub system and provides reporting endpoints for farms, cows, cow activities, and milk production.
+🔑 Authentication
+
+FarmHub Reporting API uses JWT tokens for authentication.
+
+1. Login to get Token
+
+Endpoint: /auth/token
+Method: POST
+Payload:
+
+{
+  "username": "your_username",
+  "password": "your_password"
+}
+
+
+Response:
+
+{
+  "access": "<JWT_ACCESS_TOKEN>",
+  "refresh": "<JWT_REFRESH_TOKEN>"
+}
+
+
+access: Use this token in the Authorization header for API requests.
+
+refresh: Can be used to generate a new access token if expired (not implemented yet).
+👤 User Endpoints
+
+| Endpoint    | Method | Description           | Notes                                     |
+| ----------- | ------ | --------------------- | ----------------------------------------- |
+| `/users/me` | GET    | Get current user info | Must pass `Authorization: Bearer <token>` |
+
+🌱 Farm Endpoints
+| Endpoint | Method | Description | Permissions                                                  |
+| -------- | ------ | ----------- | ------------------------------------------------------------ |
+| `/farms` | GET    | List farms  | SuperAdmin: all, Agent: own hierarchy, Farmer: assigned farm |
+
+🐄 Cow Endpoints
+| Endpoint                | Method | Description                              | Permissions                                         |
+| ----------------------- | ------ | ---------------------------------------- | --------------------------------------------------- |
+| `/cow/details`          | GET    | List cows                                | SuperAdmin: all, Agent: hierarchy, Farmer: own cows |
+| `/cow/activity/summary` | GET    | Cow activity report (treatments & costs) | Same as above                                       |
+🥛 Milk Production Endpoints
+| Endpoint                   | Method | Description                              | Permissions                                         |
+| -------------------------- | ------ | ---------------------------------------- | --------------------------------------------------- |
+| `/production/milk/summary` | GET    | Milk production report (per cow & month) | SuperAdmin: all, Agent: hierarchy, Farmer: own cows |
+
+⚙️ Roles & Permissions
+| Role           | Farms              | Cows               | Cow Activities     | Milk Production    |
+| -------------- | ------------------ | ------------------ | ------------------ | ------------------ |
+| **SuperAdmin** | View all           | View all           | View all           | View all           |
+| **Agent**      | View own hierarchy | View own hierarchy | View own hierarchy | View own hierarchy |
+| **Farmer**     | Assigned farm only | Own cows           | Own cows           | Own cows           |
+
+Farmer can only see data related to their own farm and cows.
+Agent can see all farmers under them.
+SuperAdmin sees all data.
+🧩 Notes
+
+JWT expires after 3 hours by default. Refresh token expires in 1 day.
+
+All reporting endpoints use FastAPI Dependency Injection to get the current user from token.
+
+Monthly milk summary uses SQL extract(year, month) for aggregation.
+
+Cow activity and milk reports return totals per cow and grand totals.
+---
+
+
+```text
+Developer
+❤️ Shahoraiar Hossain
+```
