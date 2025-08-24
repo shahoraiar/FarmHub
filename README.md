@@ -183,7 +183,7 @@ Permissions are enforced by **Django Groups + DRF Custom Permissions**:
 ```
 python manage.py createsuperuser
 ```
-→ Enter credentials (username, email, password).
+→ Enter credentials (username, email, password).  
 → Login to /dashboard (Django Admin).
 
 2. From the Admin UI, the SuperUser can create a SuperAdmin user.
