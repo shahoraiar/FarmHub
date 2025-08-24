@@ -196,21 +196,24 @@ POST /registration/
 👉 Must be created by SuperUser otherwise created_by=0
 Create Agent
 POST /registration/ (with JWT of SuperAdmin)
+```text
 {
   "username": "agent1",
   "password": "1234",
   "user_role": "Agent"
 }
-
+```
 Create Farm
 POST /farms/create/ (with JWT of Agent)
+```text
 {
   "name": "Green Farm",
   "location": "Village X"
 }
-
+````
 Create Farmer
 POST /farms/farmer/create/ (with JWT of Agent)
+```text
 {
   "first_name": "John",
   "last_name": "Doe",
@@ -221,6 +224,7 @@ POST /farms/farmer/create/ (with JWT of Agent)
   "address": "Village Road",
   "farm": 1
 }
+```
 
 🐄 Livestock Management
 Cow
@@ -387,8 +391,9 @@ All reporting endpoints use FastAPI Dependency Injection to get the current user
 Monthly milk summary uses SQL extract(year, month) for aggregation.
 
 Cow activity and milk reports return totals per cow and grand totals.
----
 
+
+---
 
 ```text
 Developer
