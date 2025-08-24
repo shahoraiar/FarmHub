@@ -1,10 +1,8 @@
 # 🌾 FarmHub
 
-FarmHub is a Django-based farm management system with role-based access and integrated livestock & production management.
-
-The system uses Django Admin for backend control and DRF APIs for frontend/mobile integration.
-
-This project combines **Django (Admin & APIs)** and **FastAPI (Reporting APIs)** with **role-based permissions**.
+FarmHub is a Django-based farm management system with role-based access and integrated livestock & production management.  
+The system uses Django Admin for backend control and DRF APIs for frontend/mobile integration.  
+This project combines **Django (Admin & APIs)** and **FastAPI (Reporting APIs)** with **role-based permissions**.  
 
 ---
 
