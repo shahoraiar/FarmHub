@@ -318,12 +318,11 @@ POST /production/cow/milk/
   "date": "2025-08-25"
 }
 ```
-List Farms, Farmers, Cows, Cow Activities, Milk Production
-GET /farms/list/
-GET /farms/farmer/list/
-GET /cow/list/
-GET /cow/activity/list/
-GET /production/cow/milk/list/
+- List Farms – GET /farms/list/
+- List Farmers – GET /farms/farmer/list/
+- List Cows – GET /cow/list/
+- List Cow Activities – GET /cow/activity/list/
+- List Milk Production – GET /production/cow/milk/list/
 
 🌾 FarmHub Reporting API - README
 
