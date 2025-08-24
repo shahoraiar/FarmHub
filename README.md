@@ -109,7 +109,7 @@ uvicorn reporting.main:app --port 5000 --reload
 ## User Registration API(DRF)
 | URL              | Method | Description         | Who Can Create                                                                    |
 | ---------------- | ------ | ------------------- | --------------------------------------------------------------------------------- |
-| `/registration/` | POST   | Register a new user | SuperUser → SuperAdmin <br> SuperAdmin → Agent <br> Farmers created via Farms app |
+| `api/v1/registration/` | POST   | Register a new user | SuperUser → SuperAdmin <br> SuperAdmin → Agent <br> Farmers created via Farms app |
 
 
 ## 🌱 Farms & Farmers
@@ -120,8 +120,8 @@ uvicorn reporting.main:app --port 5000 --reload
 
 | URL | Method | Description | Permission |
 |-----|--------|-------------|-------------|
-| `/farms/farmer/create/` | POST | Create a **Farmer user** + Farmer profile | SuperAdmin, Agent (with model perms) |
-| `/farms/farmer/list/` | GET | List Farmers under your control | SuperAdmin (all via Agents) / Agent (own farmers) |
+| `api/v1/farms/farmer/create/` | POST | Create a **Farmer user** + Farmer profile | SuperAdmin, Agent (with model perms) |
+| `api/v1/farms/farmer/list/` | GET | List Farmers under your control | SuperAdmin (all via Agents) / Agent (own farmers) |
 
 **Conditions**:
 - When creating Farmer, must select a Farm.  
@@ -133,8 +133,8 @@ uvicorn reporting.main:app --port 5000 --reload
 ### Farm
 | URL | Method | Description | Permission |
 |-----|--------|-------------|-------------|
-| `/farms/create/` | POST | Create a Farm | SuperAdmin, Agent (with model perms) |
-| `/farms/list/` | GET | List Farms | SuperAdmin (sees farms of own agents), Agent (own farms), Farmer (only their assigned farm) |
+| `api/v1/farms/create/` | POST | Create a Farm | SuperAdmin, Agent (with model perms) |
+| `api/v1/farms/list/` | GET | List Farms | SuperAdmin (sees farms of own agents), Agent (own farms), Farmer (only their assigned farm) |
 
 **Conditions**:
 - **SuperAdmin** → can assign farms to Agents created by them.  
@@ -211,7 +211,7 @@ This will create a SuperAdmin account directly via API.
 ✅ Clear difference:
 
 - Django Admin UI → create via createsuperuser + Dashboard login.
-- API → send JSON to /registration/, no login needed first.
+- API → send JSON to api/v1/registration/, no login needed first.
   
 ---
 
@@ -253,14 +253,14 @@ After successful creation, this user is automatically added to the Farmer Role g
 Cow
 | URL            | Method | Description  | Permission                                             |
 | -------------- | ------ | ------------ | ------------------------------------------------------ |
-| `/cow/create/` | POST   | Create a cow | Farmer                                                 |
-| `/cow/list/`   | GET    | List cows    | SuperAdmin, Agent (under hierarchy), Farmer (own cows) |
+| `api/v1/cow/create/` | POST   | Create a cow | Farmer                                                 |
+| `api/v1/cow/list/`   | GET    | List cows    | SuperAdmin, Agent (under hierarchy), Farmer (own cows) |
 
 Cow Activity
 | URL                     | Method | Description           | Permission                |
 | ----------------------- | ------ | --------------------- | ------------------------- |
-| `/cow/activity/create/` | POST   | Create a cow activity | Farmer                    |
-| `/cow/activity/list/`   | GET    | List cow activities   | SuperAdmin, Agent, Farmer |
+| `api/v1/cow/activity/create/` | POST   | Create a cow activity | Farmer                    |
+| `api/v1/cow/activity/list/`   | GET    | List cow activities   | SuperAdmin, Agent, Farmer |
 
 ## Validation rules:  
 - Farmer can only add cows/activities for own farm  
@@ -274,8 +274,8 @@ Cow Activity
 🥛 Milk Production
 | URL                          | Method | Description        | Permission                |
 | ---------------------------- | ------ | ------------------ | ------------------------- |
-| `/production/cow/milk/`      | POST   | Create milk record | Farmer                    |
-| `/production/cow/milk/list/` | GET    | List milk records  | SuperAdmin, Agent, Farmer |
+| `api/v1/production/cow/milk/`      | POST   | Create milk record | Farmer                    |
+| `api/v1/production/cow/milk/list/` | GET    | List milk records  | SuperAdmin, Agent, Farmer |
 
 Rules:  
 - Farmer can add milk for own cows only
@@ -345,12 +345,13 @@ POST api/v1/production/cow/milk/
 
 --- 
 
-🌾 FarmHub Reporting API **(FastAPI)**
 
-FarmHub Reporting API is a FastAPI-based reporting service for livestock and farm management.  
-It works alongside the Django FarmHub system and provides reporting endpoints for farms, cows, cow activities, and milk production.  
+#🌾 FarmHub Reporting API **(FastAPI)**
 
-🔑 Authentication   
+### FarmHub Reporting API is a FastAPI-based reporting service for livestock and farm management.  
+### It works alongside the Django FarmHub system and provides reporting endpoints for farms, cows, cow activities, and milk production.  
+
+## 🔑 Authentication   
 FarmHub Reporting API uses JWT tokens for authentication.
 
 1. Login to get Token
