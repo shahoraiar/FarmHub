@@ -284,6 +284,7 @@ Farmer → create & edit their own milk records
 🔗 Example API Workflows
 Create Cow (Farmer)
 POST /cow/create/
+```text
 {
   "cow_tag": "C-101",
   "name": "Daisy",
@@ -294,9 +295,10 @@ POST /cow/create/
   "weight_kg": 120,
   "source": "born"
 }
-
+```
 Create Cow Activity (Farmer)
 POST /cow/activity/create/
+```text
 {
   "cow": 1,
   "activity_type": "Vaccination",
@@ -305,14 +307,17 @@ POST /cow/activity/create/
   "priority": "High",
   "is_completed": false
 }
+```
 Create Milk Record (Farmer)
 POST /production/cow/milk/
+```text
 {
   "cow": 1,
   "morning_yield_liters": 10,
   "evening_yield_liters": 8,
   "date": "2025-08-25"
 }
+```
 List Farms, Farmers, Cows, Cow Activities, Milk Production
 GET /farms/list/
 GET /farms/farmer/list/
