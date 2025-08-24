@@ -58,17 +58,29 @@ venv\Scripts\activate      # Windows[powershell]
 pip install -r requirements.txt
 ```
 ---
+# 🚀 Run the Project
+
 ## Run Django 
+Example: if your terminal looks like this: 
+(venv) I:\FarmHub>
+👉 First go inside the core folder:
 ```bash
 cd core
+```
+👉 Then run the Django server:
+```bash
 python manage.py runserver
 ```
 
-## Run FastAPI (Reporting) in another Terminal
+## Run FastAPI (Reporting Service)
+⚡ Important: You must open another terminal window/tab and also activate the virtual environment there.
+Example: in the second terminal, if you are here:
+(venv) I:\FarmHub>
+
+👉 Run the FastAPI server:
 ```bash
 uvicorn reporting.main:app --port 5000 --reload
 ```
-
 
 
 
