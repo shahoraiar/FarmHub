@@ -39,10 +39,14 @@ farmhub/
 
 ## 🚀 Setup Instructions
 
-### 1. Clone & Install
+### Step 1: Create the main project folder
+```bash
+mkdir FarmHub
+cd FarmHub
+```
+### Step 2: Clone your repository inside it
 ```bash
 git clone https://github.com/shahoraiar/FarmHub.git
-cd farmhub
 ```
 ### 2. Create virtual environment
 ```bash
