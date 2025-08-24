@@ -37,7 +37,7 @@ farmhub/
 
 ---
 
-## 🚀 Setup Instructions
+## 🚀 Setup Instructions (Djagno + DRF)
 
 ### Step 1: Clone your repository inside it
 ```bash
@@ -53,14 +53,14 @@ python -m venv venv
 source venv/bin/activate   # Linux/Mac[git bash]
 venv\Scripts\activate      # Windows[powershell]
 ```
-### 4. Install dependencies
+### Step 4: Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 ---
-## 🚀 Run the Project
+# 🚀 Run the Project
 
-### Run Django 
+## Run Django 
 ```
 Example: if your terminal looks like this: 
 (venv) I:\FarmHub>
@@ -87,13 +87,18 @@ uvicorn reporting.main:app --port 5000 --reload
 ---
 
 ## 🔑 Authentication & Tokens
-| URL | Method | Description | Permission |
-|-----|--------|-------------|-------------|
-| `/` | GET | Default login page (Django’s default `LoginView`) | Public |
-| `/dashboard/login/` | GET | Redirects to **Django Admin Login** | Public |
-| `/dashboard/` | GET | Django Admin Dashboard | Logged-in users (role-based) |
-| `/token/` | POST | Get JWT token (username & password) | Public |
-| `/token/refresh/` | POST | Refresh JWT token | Authenticated users |
+
+> **Note:**  
+> - `/dashboard/login/` and `/dashboard/` are for **Django Admin UI**.   
+> - `/token/` and `/token/refresh/` are for **DRF API (JWT authentication)**.
+
+| URL                  | Method | Description                                       | Permission                     |
+|----------------------|--------|---------------------------------------------------|--------------------------------|
+| `/`                  | GET    | Default login page (Django’s `LoginView`)        | Public                         |
+| `/dashboard/login/`  | GET    | Redirects to **Django Admin Login**             | Public                         |
+| `/dashboard/`        | GET    | **Django Admin Dashboard**                        | Logged-in users (role-based)   |
+| `/token/`            | POST   | Get **JWT token** (provide username & password)  | Public                         |
+| `/token/refresh/`    | POST   | Refresh JWT token                                 | Authenticated users            |
 
 ---
 
